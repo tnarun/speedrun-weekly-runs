@@ -1,3 +1,13 @@
+server-upload
+result.json
+experiment
+env.js
+latestleaderboard.html
+latestleaderboard.json
+.vscode
+.fun
+
+
 # Logs
 logs
 *.log

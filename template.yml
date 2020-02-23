@@ -1,0 +1,22 @@
+ROSTemplateFormatVersion: '2015-09-01'
+Transform: 'Aliyun::Serverless-2018-04-03'
+Resources:
+  speedrun-weekly-leaderboard-runs:
+    Type: 'Aliyun::Serverless::Service'
+    Properties:
+      Description: This is speedrun-weekly-leaderboard-runs service
+    spider:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: spider.handler
+        Runtime: nodejs8
+        Timeout: 60
+        MemorySize: 512
+        CodeUri: code
+      Events:
+        platformsTimerTrigger:
+          Type: Timer
+          Properties:
+            CronExpression: 0 0 * * * *
+            Enable: true
+            Payload: speedrun-spider
