@@ -12,7 +12,7 @@ const ossClient = new OSS({
   "accessKeySecret": process.env.SIBBAY_OSS_ACCESS_KEY_SECRET
 })
 
-const output = async (fname, data) => {
+const outputOSS = async (fname, data) => {
   let fileKey = `speedrun-weekly-leaderboard-runs-data/${fname}`
   await ossClient.put(fileKey, new Buffer(data))
 }
@@ -22,17 +22,19 @@ const run = async () => {
   let html = await res.text()
 
   let now = new Date()
-  let stamp = now.getTime()
-  let time = moment(now).utcOffset(8).format('YYYY-MM-DD-HH-mm-ss')
+  let m = moment(now).utcOffset(8)
+  let time = m.format('YYYY-MM-DD-HH-mm-ss')
+  let date = m.format('YYYY-MM-DD')
 
   try {
-    await output(`latestleaderboard-${time}-${stamp}.html`, html)
+    await outputOSS(`${date}/latestleaderboard-${time}.html`, html)
   } catch (e) {}
 
   try {
     let data = parseHTML(html)
-    await output(`latestleaderboard-${time}-${stamp}.json`, 
-      JSON.stringify(data, null, 2))
+    let jsondata = JSON.stringify(data, null, 2)
+    await outputOSS(`${date}/latestleaderboard-${time}.json`, jsondata)
+    await outputOSS(`latestleaderboard-newest.json`, jsondata)
   } catch (e) {}
 }
 

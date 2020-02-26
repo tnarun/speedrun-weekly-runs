@@ -1,11 +1,13 @@
 server-upload
 result.json
 experiment
+experiment*
 env.js
 latestleaderboard.html
 latestleaderboard.json
 .vscode
 .fun
+.DS_Store
 
 
 # Logs
