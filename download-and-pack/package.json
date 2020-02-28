@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "ali-oss": "^6.5.1",
+    "mkdirp": "^1.0.3",
+    "mocha": "^7.1.0",
+    "moment": "^2.24.0",
+    "node-fetch": "^2.6.0",
+    "should": "^13.2.3"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}

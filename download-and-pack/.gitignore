@@ -1,0 +1,4 @@
+output-*/
+output-*.json
+detail-*.json
+output/
