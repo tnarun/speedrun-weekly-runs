@@ -5,18 +5,37 @@ Resources:
     Type: 'Aliyun::Serverless::Service'
     Properties:
       Description: This is speedrun-weekly-leaderboard-runs service
+    
+    # 抓取榜单 html 页面保存在 OSS
     spider:
       Type: 'Aliyun::Serverless::Function'
       Properties:
         Handler: spider.handler
         Runtime: nodejs8
-        Timeout: 120
+        Timeout: 300
         MemorySize: 512
         CodeUri: code
       Events:
         platformsTimerTrigger:
           Type: Timer
           Properties:
-            CronExpression: 0 0 * * * *
+            CronExpression: 0 0 * * * * # 每整小时运行
             Enable: true
             Payload: speedrun-spider
+
+    # 打包前一天每小时的 html 为 json, 保存在 OSS
+    pack:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: pack.handler
+        Runtime: nodejs8
+        Timeout: 300
+        MemorySize: 512
+        CodeUri: code
+      Events:
+        platformsTimerTrigger:
+          Type: Timer
+          Properties:
+            CronExpression: 0 10 12 * * * # 每天 12:10 运行
+            Enable: true
+            Payload: speedrun-pack

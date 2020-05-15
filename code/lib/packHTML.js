@@ -1,13 +1,4 @@
-const fs = require('fs')
-const parseHTML = require('../code/lib/parse-leaderboard-html')
-
-// 检查命令行参数
-const DATE = process.argv[2]
-if (!DATE) {
-  console.log(`usage: node pack.js 2020-xx-xx`)
-  process.exit(0)
-}
-console.log(`DATE: ${DATE}`)
+const parseHTML = require('./parse-leaderboard-html')
 
 const uniqBy = (arr, keyName) => {
   let uniqValues = {}
@@ -22,17 +13,14 @@ const uniqBy = (arr, keyName) => {
   return uniqData
 }
 
-const pack = async () => {
+const pack = async ({ DATE, htmlContents }) => {
   let data = []
 
-  let dir = `output/${DATE}-htmls`
-  let files = fs.readdirSync(dir).filter(x => x.includes('.html'))
-  for (let f of files) {
-    let htmlContent = fs.readFileSync(`${dir}/${f}`)
+  htmlContents.forEach((htmlContent, idx) => {
     let d = parseHTML(htmlContent)
     data = [].concat(data).concat(d)
-    console.log(f)
-  }
+    console.log(idx)
+  })
 
   let outputData = data
     .filter(x => x.place === '1st') // 第一名
@@ -43,9 +31,9 @@ const pack = async () => {
   outputData = uniqBy(outputData, 'link')
 
   // 不能根据榜单去重，因为可能有若干子榜
-
-  fs.writeFileSync(`output/${DATE}-pack.json`, JSON.stringify(outputData, null, 2))
+  
   console.log(`outputed ${ outputData.length } results`)
+  return outputData
 }
 
-pack().then()
+module.exports = pack
