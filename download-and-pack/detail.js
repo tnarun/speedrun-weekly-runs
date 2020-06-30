@@ -1,6 +1,11 @@
+require('../code/env')
+
+// 依赖于自动调度函数
+// https://fc.console.aliyun.com/service/cn-hongkong/speedrun-weekly-leaderboard-runs/function/pack/code
+
 const fs = require('fs')
 const utils = require('./lib/utils')
-const ossClient = require('./lib/ossClient')
+const ossClient = require('../code/lib/ossClient')
 
 const DATE = process.argv[2]
 if (!DATE) {
@@ -22,8 +27,16 @@ const getPos = async () => {
   return {}
 }
 
+const getPackData = async () => {
+  let fileKey = `speedrun-weekly-leaderboard-runs-data/packs/${DATE}-pack.json`
+  console.log(`get fileKey: ${fileKey}`)
+  let res = await ossClient.get(fileKey)
+  let data = JSON.parse(res.content)
+  return data
+}
+
 const run = async () => {
-  let data = require(`./output/${DATE}-pack.json`)
+  let data = await getPackData()
   let posData = await getPos()
   
   // 读取 detail

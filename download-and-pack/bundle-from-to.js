@@ -1,8 +1,10 @@
+require('../code/env')
+
 const moment = require('moment')
 const fetch = require('node-fetch')
 const fs = require('fs')
 const mkdirp = require('mkdirp')
-const ossClient = require('./lib/ossClient')
+const ossClient = require('../code/lib/ossClient')
 
 const _ = require('lodash')
 
@@ -17,9 +19,13 @@ if (!(FROM && TO)) {
 console.log(`FROM: ${FROM} TO: ${TO}`)
 
 const fetchDateDetail = async (date) => {
-  let url = `http://tna-upload.oss-cn-shanghai.aliyuncs.com/speedrun-weekly-leaderboard-runs-data/${date}-detail.json`
-  let res = await fetch(url)
-  return await res.json()
+  try {
+    let url = `http://tna-upload.oss-cn-shanghai.aliyuncs.com/speedrun-weekly-leaderboard-runs-data/${date}-detail.json`
+    let res = await fetch(url)
+    return await res.json()
+  } catch (e) {
+    return []
+  }
 }
 
 

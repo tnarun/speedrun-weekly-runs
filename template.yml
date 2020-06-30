@@ -13,7 +13,7 @@ Resources:
         Handler: spider.handler
         Runtime: nodejs8
         Timeout: 300
-        MemorySize: 512
+        MemorySize: 1024
         CodeUri: code
       Events:
         platformsTimerTrigger:
@@ -30,12 +30,30 @@ Resources:
         Handler: pack.handler
         Runtime: nodejs8
         Timeout: 300
-        MemorySize: 512
+        MemorySize: 2048
         CodeUri: code
       Events:
         platformsTimerTrigger:
           Type: Timer
           Properties:
-            CronExpression: 0 10 12 * * * # 每天 12:10 运行
+            CronExpression: 0 10 4 * * * # 每天 12:10 运行 utc 4
             Enable: true
             Payload: speedrun-pack
+
+    active-games:
+      Type: 'Aliyun::Serverless::Function'
+      Properties:
+        Handler: active-games.handler
+        Runtime: nodejs8
+        Timeout: 300
+        MemorySize: 2048
+        CodeUri: code
+      Events:
+        platformsTimerTrigger:
+          Type: Timer
+          Properties:
+            CronExpression: 0 0,30 * * * * # 每半小时运行
+            Enable: true
+            Payload: speedrun-active-games
+
+# https://www.alibabacloud.com/help/zh/doc-detail/68172.htm

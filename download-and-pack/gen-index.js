@@ -1,6 +1,6 @@
-const ossClient = require('./lib/ossClient')
-const fs = require('fs')
+require('../code/env')
 
+const ossClient = require('../code/lib/ossClient')
 const YEAR = 2020
 
 const getMonthFileNames = async ({ year, month }) => {
